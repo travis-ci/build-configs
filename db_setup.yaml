@@ -1,0 +1,3 @@
+before_script:
+  - createdb travis_test || true
+  - curl -fs https://raw.githubusercontent.com/travis-ci/travis-migrations/master/db/main/structure.sql | psql travis_test
