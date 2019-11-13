@@ -1,0 +1,5 @@
+before_script:
+- git clone https://github.com/travis-ci/build-configs.git /tmp/build-configs
+
+script:
+- '[[ $TRAVIS_TEST_RESULT = 0 ]] && /tmp/build-configs/ship_docker/trigger'
