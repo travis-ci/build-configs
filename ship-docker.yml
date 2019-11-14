@@ -2,7 +2,8 @@ env:
 - secure: "sZfk8CtuYUv1SYWhMOBQvuf/kq6+eEFTC9NC4xV6lLcPY185H9GoQFZpisvpUGW9puqd0LcxtckUvskdlti7kXIN+Dc7Kn5wu693b0yD2mKkgKucpry9RHIBI8CgOBlfvPaLYSr0XYfmof80oyMwe+is+mvNqCFNUXlRXS+dcBy3aOf/VtMz6JBsSZTEMy4KlgJKcweIiHUWFsrbla4L3dD9doQaI64MtHzCzokjHik+P9IxKxSNkkt/VkS6ORbvn1vsAmmvq4KyXs6pqKT8ZU/dxXXSiondyifOfs+dhhJrzRlaqw6HCaJD6LUvHkkQ3FUs8aNgZZZa8oFeiAiJo+ssiZ4FAxbW1a+sUX00FjMx6oHv+7RNOeSdz+3HfawyXId/rs1YP1oshYRnK0zGSLNrmAZHxckTF6W3c89qW4A8dGC+7QHjycqC14g7fDnmx1+LasMMhptP66fQw3ldfN/9FjRRqx4pq2/TqbGjVAssztolPfEqHrSoTgrEAn4wvfu3s2Lc72uC7nrdIAlNofi56fQtirMz8TpOKc1KXHQEbOWO3VrLu++uZEhLG5VQ4nCi80ajFHQ/G6haOgH2WRKTnQKlyE8CWP9cTNOqXUFHxoosWK0nKjW67xa6P9CC+Q+uZRzeXFYeHd6Ngh4HmKP5Tf4WYAGM0LCkQP6bfKw="
 
 before_script:
-- git clone https://github.com/travis-ci/build-configs.git /tmp/build-configs
+- curl -s https://raw.githubusercontent.com/travis-ci/build-configs/master/ship_docker/trigger > /tmp/trigger
+- chmod +x /tmp/trigger
 
 script:
-- '[[ $TRAVIS_TEST_RESULT = 0 ]] && /tmp/build-configs/ship_docker/trigger'
+- '[[ $TRAVIS_TEST_RESULT = 0 ]] && /tmp/trigger'
