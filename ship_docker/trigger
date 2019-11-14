@@ -34,10 +34,7 @@ body = {
         depth: false
       },
       before_script: [
-        'git fetch',
-        'git reset --hard origin/master',
-        'git clone https://github.com/travis-ci/build-configs.git /tmp/build-configs',
-        'cp /tmp/build-configs/ship_docker/Makefile ./Makefile'
+        'curl -s https://raw.githubusercontent.com/travis-ci/build-configs/master/ship_docker/Makefile > Makefile'
       ],
       script: [
         'make ship'
