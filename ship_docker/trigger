@@ -45,7 +45,7 @@ body = {
       },
       before_script: [
         'git fetch',
-        "git reset --hard #{sha}",
+        "git checkout #{sha}",
         'curl -s https://raw.githubusercontent.com/travis-ci/build-configs/master/ship_docker/Makefile > Makefile'
       ],
       script: [
