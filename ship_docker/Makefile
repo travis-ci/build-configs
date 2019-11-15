@@ -1,37 +1,20 @@
 SHELL := bash
 
-VERSION_VALUE ?= $(shell git rev-parse --short HEAD 2>/dev/null)
-DOCKER_IMAGE_REPO ?= travisci/travis-gatekeeper
 DOCKER_DEST ?= $(DOCKER_IMAGE_REPO):$(VERSION_VALUE)
 QUAY ?= quay.io
 QUAY_IMAGE ?= $(QUAY)/$(DOCKER_IMAGE_REPO)
 
-ifdef $$QUAY_ROBOT_HANDLE
-	QUAY_ROBOT_HANDLE := $$QUAY_ROBOT_HANDLE
-endif
-
-ifdef $$QUAY_ROBOT_TOKEN
-	QUAY_ROBOT_TOKEN := $$QUAY_ROBOT_TOKEN
-endif
-
-ifndef $$TRAVIS_BRANCH
-	TRAVIS_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
-endif
-BRANCH = $(shell echo "$(TRAVIS_BRANCH)" | sed 's/\//_/')
-
-ifdef $$TRAVIS_PULL_REQUEST
-	TRAVIS_PULL_REQUEST := $$TRAVIS_PULL_REQUEST
-endif
-
-ifndef $$BUNDLE_GEMS__CONTRIBSYS__COM
-	BUNDLE_GEMS__CONTRIBSYS__COM ?= $$BUNDLE_GEMS__CONTRIBSYS__COM
-endif
+BRANCH = $(shell echo "$(REPO_BRANCH)" | sed 's/\//_/')
 
 DOCKER ?= docker
 
 .PHONY: docker-build
 docker-build:
+ifeq ($(BUNDLE_GEMS__CONTRIBSYS__COM),)
+	$(DOCKER) build -t $(DOCKER_DEST) .
+else
 	$(DOCKER) build --build-arg bundle_gems__contribsys__com=$(BUNDLE_GEMS__CONTRIBSYS__COM) -t $(DOCKER_DEST) .
+endif
 
 .PHONY: docker-login
 docker-login:
@@ -53,7 +36,7 @@ docker-push-branch:
 ship: docker-build docker-login
 
 ifeq ($(BRANCH),master)
-ifeq ($(TRAVIS_PULL_REQUEST),false)
+ifeq ($(PULL_REQUEST),false)
 ship: docker-push-latest-master
 endif
 else

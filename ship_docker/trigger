@@ -20,6 +20,11 @@ end
 
 token = ENV['TRAVIS_API_TOKEN']
 repo  = ENV['TRAVIS_REPO_SLUG']
+image_repo = "travisci/#{repo.sub(/.*?\//, '')}"
+commit = ENV['TRAVIS_COMMIT']
+version = commit[0, 7]
+branch = ENV['TRAVIS_BRANCH']
+pull_request = ENV['TRAVIS_PULL_REQUEST']
 
 uri = URI.parse("https://api.travis-ci.com/repo/#{repo.sub('/', '%2F')}/requests")
 
@@ -37,7 +42,7 @@ body = {
         'curl -s https://raw.githubusercontent.com/travis-ci/build-configs/master/ship_docker/Makefile > Makefile'
       ],
       script: [
-        'make ship'
+        "DOCKER_IMAGE_REPO=#{image_repo} VERSION_VALUE=#{version} REPO_BRANCH=#{branch} PULL_REQUEST=#{pull_request} make ship"
       ]
     }
   }
