@@ -18,15 +18,14 @@ def post(uri, body, token)
   http.request(req)
 end
 
-token = ENV['TRAVIS_API_TOKEN']
-repo  = ENV['TRAVIS_REPO_SLUG']
-image_repo = "travisci/#{repo.sub(/.*?\//, '')}"
-commit = ENV['TRAVIS_COMMIT']
-version = commit[0, 7]
+token  = ENV['TRAVIS_API_TOKEN']
+slug   = ENV['TRAVIS_REPO_SLUG']
+repo   = "travisci/#{slug.sub(/.*?\//, '')}"
+sha    = ENV['TRAVIS_COMMIT'][0, 7]
 branch = ENV['TRAVIS_BRANCH']
-pull_request = ENV['TRAVIS_PULL_REQUEST']
+pr     = ENV['TRAVIS_PULL_REQUEST']
 
-uri = URI.parse("https://api.travis-ci.com/repo/#{repo.sub('/', '%2F')}/requests")
+uri = URI.parse("https://api.travis-ci.com/repo/#{slug.sub('/', '%2F')}/requests")
 
 body = {
   request: {
@@ -38,11 +37,19 @@ body = {
       git: {
         depth: false
       },
+      env: {
+        DOCKER_IMAGE_REPO: repo,
+        VERSION_VALUE: sha,
+        REPO_BRANCH: branch,
+        PULL_REQUEST: pr
+      },
       before_script: [
+        'git fetch',
+        "git reset --hard #{sha}",
         'curl -s https://raw.githubusercontent.com/travis-ci/build-configs/master/ship_docker/Makefile > Makefile'
       ],
       script: [
-        "DOCKER_IMAGE_REPO=#{image_repo} VERSION_VALUE=#{version} REPO_BRANCH=#{branch} PULL_REQUEST=#{pull_request} make ship"
+        'make ship'
       ]
     }
   }
