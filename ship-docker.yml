@@ -5,5 +5,5 @@ before_script:
 - curl -s https://raw.githubusercontent.com/travis-ci/build-configs/master/ship_docker/trigger > /tmp/trigger
 - chmod +x /tmp/trigger
 
-script:
+after_script:
 - '[[ $TRAVIS_TEST_RESULT = 0 ]] && /tmp/trigger'
