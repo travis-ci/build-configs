@@ -44,8 +44,8 @@ body = {
         PULL_REQUEST: pr
       },
       before_script: [
-        'git fetch',
-        "git checkout #{sha}",
+        "git fetch origin #{branch}",
+        "git checkout -qf #{sha}",
         'curl -s https://raw.githubusercontent.com/travis-ci/build-configs/master/ship_docker/Makefile > Makefile'
       ],
       script: [
