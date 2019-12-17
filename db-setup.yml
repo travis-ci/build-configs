@@ -13,5 +13,7 @@ before_install:
   - 'gem update --system'
 
 before_script:
-  - createdb travis_test || true
+  - psql --version
+  - psql -c 'CREATE DATABASE travis_test;' -U postgres
+  - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
   - curl -fs https://raw.githubusercontent.com/travis-ci/travis-migrations/master/db/main/structure.sql | psql travis_test
