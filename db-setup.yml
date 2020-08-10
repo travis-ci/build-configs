@@ -7,11 +7,11 @@ before_install:
   - sed -e 's/^port.*/port = 5432/' /etc/postgresql/11/main/postgresql.conf > postgresql.conf
   - sudo chown postgres postgresql.conf
   - sudo mv postgresql.conf /etc/postgresql/11/main
-  - sudo cp /etc/postgresql/{10,11}/main/pg_hba.conf  
+  - sudo cp /etc/postgresql/{10,11}/main/pg_hba.conf
   - sudo service postgresql start 11
 
 before_script:
   - psql --version
   - psql -c 'CREATE DATABASE travis_test;' -U postgres
-  - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
+  - psql -t -c "SELECT 1 FROM pg_roles WHERE rolname='travis'" -U postgres | grep 1 || psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres
   - curl -fs https://raw.githubusercontent.com/travis-ci/travis-migrations/master/db/main/structure.sql | psql -v ON_ERROR_STOP=1 travis_test
