@@ -8,7 +8,8 @@ before_install:
   - sudo chown postgres postgresql.conf
   - sudo mv postgresql.conf /etc/postgresql/11/main
   - sudo cp /etc/postgresql/{10,11}/main/pg_hba.conf
-  - sudo service postgresql start 11
+  - sudo service postgresql stop
+  - sudo systemctl start postgresql@11-main
 
 before_script:
   - psql --version
